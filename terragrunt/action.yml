@@ -20,7 +20,7 @@ inputs:
   use-dotversion:
     description: "If set to `'true'` then the action will check the root of the repo for `.terragrunt-version` and `.terrafomr-version` for version information."
     required: false
-    default: 'false'
+    default: 'true'
   aws-region:
     description: "AWS region"
     required: false
