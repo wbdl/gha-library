@@ -7,7 +7,7 @@ inputs:
     required: false
     default: 'false'
   terragrunt-version:
-    description: 'Terragrunt version, if set will override `.terragrunt-version` value''
+    description: 'Terragrunt version, if set will override `.terragrunt-version` value'
     required: false
     default: 'false'
   terraform-version:
