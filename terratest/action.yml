@@ -65,7 +65,7 @@ runs:
         FAIL=false
         for DIR in $(find . -type d -not -path '*/.*'); do
           tflint -f compact --loglevel=info "$DIR"
-          if [[ -n $? ]]; then
+          if [[ "$?" -ne 0 ]]; then
             echo "No newline: $DIR"
             FAIL=true
           fi
