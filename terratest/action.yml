@@ -62,7 +62,18 @@ runs:
       working-directory: ${{ env.working_directory }}
       run: |
         tflint --init
-        find . -type d -not -path '*/.*' -exec tflint -f compact --loglevel=info {} \;
+        FAIL=false
+        for DIR in $(find . -type d -not -path '*/.*'); do
+          tflint -f compact --loglevel=info "$DIR"
+          if [[ -n $? ]]; then
+            echo "No newline: $DIR"
+            FAIL=true
+          fi
+        done
+
+        if [ $FAIL == true ];then
+          exit 1
+        fi
 
     - id: tfsec
       if: ${{ inputs.run-tfsec == 'true' }}
