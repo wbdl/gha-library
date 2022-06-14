@@ -1,0 +1,63 @@
+name: 'terragrunt'
+description: 'Wrapper to execute terragrunt'
+
+inputs:
+  working-directory:
+    description: 'Terragrunt working directory'
+    required: false
+    default: './'
+  aws-role-arn:
+    description: 'AWS IAM role to execute as'
+    required: true
+  terragrunt-version:
+    description: 'Terragrunt version'
+    required: false
+    default: 'false'
+  terraform-version:
+    description: 'Terraform version'
+    required: false
+    default: 'false'
+  use-dotversion:
+    description: "If set to `'true'` then the action will check the root of the repo for `.terragrunt-version` and `.terrafomr-version` for version information."
+    required: false
+    default: 'false'
+  aws-region:
+    description: "AWS region"
+    required: false
+    default: 'us-east-1'
+  command:
+    description: 'Terragrunt command'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - id: versions
+      if: ${{ inputs.use-dotversion == 'true' }}
+      shell: bash
+      run: |
+        echo "terraform_version=$(cat .terraform-version)" >> $GITHUB_ENV
+        echo "terragrunt_version=$(cat .terragrunt-version)" >> $GITHUB_ENV
+
+    - id: setup-tg
+      uses: peter-murray/terragrunt-github-action@v1.0.0
+      with:
+        terragrunt_version: ${{ inputs.use-dotversion == 'true' && env.terragrunt_version || inputs.terragrunt-version }}
+
+    - id: setup-tf
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: ${{ inputs.use-dotversion == 'true' && env.terraform_version || inputs.terraform-version }}
+
+    - id: aws-creds
+      uses: aws-actions/configure-aws-credentials@master
+      with:
+        role-to-assume: ${{ inputs.aws-role-arn }}
+        aws-region: ${{ inputs.aws-region }}
+
+    - id: tg-command
+      shell: bash
+      env:
+        TF_INPUT: 'false'
+      working-directory: ${{ inputs.working-directory }}
+      run: terragrunt ${{ inputs.command }}

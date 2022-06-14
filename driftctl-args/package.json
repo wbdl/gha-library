@@ -1,0 +1,24 @@
+{
+  "name": "root",
+  "version": "1.0.0",
+  "description": "This Github action will generate arguments for the `snyk/driftctl-action@v1` action",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wbdl/gha-library.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wbdl/gha-library/issues"
+  },
+  "homepage": "https://github.com/wbdl/gha-library/driftctl-args#readme",
+  "dependencies": {
+    "@actions/core": "^1.8.2",
+    "aws-sdk": "^2.1145.0"
+  }
+}

@@ -1,0 +1,101 @@
+name: 'terratest'
+description: 'Run linting, tfsec, and tflint against terraform codebase.'
+
+inputs:
+  working-directory:
+    description: 'Working directory'
+    required: false
+    default: 'false'
+  terragrunt-version:
+    description: 'Terragrunt version'
+    required: false
+    default: 'false'
+  terraform-version:
+    description: 'Terraform version'
+    required: false
+    default: 'false'
+  use-dotversion:
+    description: "If set to `'true'` then the action will check the root of the repo for `.terragrunt-version` and `.terrafomr-version` for version information."
+    required: false
+    default: 'true'
+  tfsec-config:
+    description: "tfsec config file"
+    required: false
+    default: '.tfsec.yaml'
+  github-token:
+    required: false
+    description: "Github token"
+    default: ""
+
+runs:
+  using: 'composite'
+  steps:
+    - id: setup
+      shell: bash
+      run: echo "working_directory=${{ inputs.working_directory == 'false' && env.GITHUB_WORKSPACE || inputs.working_directory }}" >> $GITHUB_ENV
+
+    - id: versions
+      if: ${{ inputs.use-dotversion == 'true' }}
+      shell: bash
+      run: |
+        echo "terraform_version=$(cat .terraform-version)" >> $GITHUB_ENV
+        echo "terragrunt_version=$(cat .terragrunt-version)" >> $GITHUB_ENV
+
+    - id: setup-tflint
+      uses: terraform-linters/setup-tflint@v2.0.0
+      with:
+        github_token: ${{ inputs.github-token }}
+
+    - id: run-tflint
+      name: TFLint
+      shell: bash
+      working-directory: ${{ env.working_directory }}
+      run: |
+        tflint --init
+        tflint -f compact
+
+    - id: tfsec
+      name: TFSec
+      uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+      with:
+        tfsec_args: --force-all-dirs --config-file ${{ inputs.tfsec-config }}
+        github_token: ${{ inputs.github-token }}
+
+    - id: setup-tg
+      uses: peter-murray/terragrunt-github-action@v1.0.0
+      with:
+        terragrunt_version: ${{ env.terragrunt_version }}
+
+    - id: setup-tf
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: ${{ env.terraform_version }}
+
+    - id: tf-fmt
+      name: Terraform fmt
+      shell: bash
+      working-directory: ${{ env.working_directory }}
+      run: terraform fmt -recursive -check
+
+    - id: tf-newlines
+      name: Newlines
+      shell: bash
+      working-directory: ${{ env.working_directory }}
+      run: |
+        FAIL=false
+        for FILE in $(find . -regextype egrep -regex ".*\.(tf|tfvars|hcl)"); do
+          if [[ -n $(tail -c1 "$FILE") ]]; then
+            echo "No newline: $FILE"
+            FAIL=true
+          fi
+        done
+
+        if [ $FAIL == true ];then
+          exit 1
+        fi
+
+    - id: tg-fmthcl
+      name: Terragrunt fmt
+      shell: bash
+      working-directory: ${{ env.working_directory }}
+      run: terragrunt hclfmt --terragrunt-check

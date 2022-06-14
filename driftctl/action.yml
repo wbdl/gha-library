@@ -1,0 +1,35 @@
+name: 'driftctl'
+description: 'Wrapper for dirftctl to automatically find tfstate files in a bucket'
+
+inputs:
+  arguments:
+    description: 'additional driftctl args'
+    required: false
+    default: ''
+  aws-region:
+    description: 'aws region'
+    required: false
+    default: 'us-east-1'
+  state-bucket:
+    description: "Terraform state bucket"
+    required: true
+  path-filter:
+    description: "Path to filter states by"
+    required: false
+    default: '/'
+
+runs:
+  using: 'composite'
+  steps:
+    - id: args
+      uses: wbdl/gha-library/driftctl-args@main
+      with:
+        arguments: ${{ inputs.arguments }}
+        aws-region: ${{ inputs.aws-region }}
+        state-bucket: ${{ inputs.state-bucket }}
+        path-filter: ${{ inputs.path-filter }}
+
+    - id: driftctl
+      uses: snyk/driftctl-action@v1
+      with:
+        args: ${{ steps.args.outputs.args }}

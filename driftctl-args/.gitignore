@@ -1,0 +1,4 @@
+.aws/
+.bash_history
+.npm/
+node_modules/

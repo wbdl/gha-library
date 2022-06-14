@@ -1,0 +1,27 @@
+name: 'driftctl args'
+description: 'Get args for driftctl'
+
+inputs:
+  arguments:
+    description: 'additional driftctl args'
+    required: false
+    default: ''
+  aws-region:
+    description: 'aws region'
+    required: false
+    default: 'us-east-1'
+  state-bucket:
+    description: "Terraform state bucket"
+    required: true
+  path-filter:
+    description: "Path to filter states by"
+    required: false
+    default: '/'
+
+outputs:
+  args: # id of output
+    description: 'arguments for driftctl'
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
