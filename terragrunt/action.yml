@@ -10,15 +10,15 @@ inputs:
     description: 'AWS IAM role to execute as'
     required: true
   terragrunt-version:
-    description: 'Terragrunt version'
+    description: 'Terragrunt version, if set will override `.terragrunt-version` value''
     required: false
     default: 'false'
   terraform-version:
-    description: 'Terraform version'
+    description: 'Terraform version, if set will override `.terraform-version` value'
     required: false
     default: 'false'
   use-dotversion:
-    description: "If set to `'true'` then the action will check the root of the repo for `.terragrunt-version` and `.terrafomr-version` for version information."
+    description: "If set to `'true'` then the action will check the root of the repo for `.terragrunt-version` and `.terraform-version` for version information."
     required: false
     default: 'true'
   aws-region:
@@ -42,12 +42,12 @@ runs:
     - id: setup-tg
       uses: peter-murray/terragrunt-github-action@v1.0.0
       with:
-        terragrunt_version: ${{ inputs.use-dotversion == 'true' && env.terragrunt_version || inputs.terragrunt-version }}
+        terragrunt_version: ${{ inputs.terragrunt-version != 'false' && inputs.terragrunt-version || env.terragrunt_version }}
 
     - id: setup-tf
       uses: hashicorp/setup-terraform@v1
       with:
-        terraform_version: ${{ inputs.use-dotversion == 'true' && env.terraform_version || inputs.terraform-version }}
+        terraform_version: ${{ inputs.terraform-version != 'false' && inputs.terraform-version || env.terraform_version }}
 
     - id: aws-creds
       uses: aws-actions/configure-aws-credentials@master
