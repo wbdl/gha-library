@@ -26,6 +26,14 @@ inputs:
     required: false
     description: "Github token"
     default: ""
+  run-tflint:
+    required: false
+    default: 'true'
+    description: Run tflint
+  run-tfsec:
+    required: false
+    default: 'true'
+    description: Run tfsec
 
 runs:
   using: 'composite'
@@ -42,11 +50,13 @@ runs:
         echo "terragrunt_version=$(cat .terragrunt-version)" >> $GITHUB_ENV
 
     - id: setup-tflint
+      if: ${{ inputs.run-tflint == 'true' }}
       uses: terraform-linters/setup-tflint@v2.0.0
       with:
         github_token: ${{ inputs.github-token }}
 
     - id: run-tflint
+      if: ${{ inputs.run-tflint == 'true' }}
       name: TFLint
       shell: bash
       working-directory: ${{ env.working_directory }}
@@ -55,6 +65,7 @@ runs:
         tflint -f compact
 
     - id: tfsec
+      if: ${{ inputs.run-tfsec == 'true' }}
       name: TFSec
       uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
       with:
