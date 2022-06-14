@@ -62,7 +62,7 @@ runs:
       working-directory: ${{ env.working_directory }}
       run: |
         tflint --init
-        tflint -f compact
+        find . -type d -not -path '*/.*' -exec tflint -f compact --loglevel=info {} \;
 
     - id: tfsec
       if: ${{ inputs.run-tfsec == 'true' }}
