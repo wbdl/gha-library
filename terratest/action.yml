@@ -78,13 +78,13 @@ runs:
     - id: tfsec
       if: ${{ inputs.run-tfsec == 'true' }}
       name: TFSec
-      uses: aquasecurity/tfsec-pr-commenter-action@v1
+      uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
       with:
         tfsec_args: --force-all-dirs --config-file ${{ inputs.tfsec-config }}
         github_token: ${{ inputs.github-token }}
 
     - id: setup-tg
-      uses: peter-murray/terragrunt-github-action@v1
+      uses: peter-murray/terragrunt-github-action@v1.0.0
       with:
         terragrunt_version: ${{ inputs.terragrunt-version != 'false' && inputs.terragrunt-version || env.terragrunt_version }}
 
