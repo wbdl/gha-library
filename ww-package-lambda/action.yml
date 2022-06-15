@@ -60,8 +60,8 @@ runs:
     - id: publish
       shell: bash
       run: |
-        	aws s3 cp ${{ inputs.zipfile }} s3://${{ inputs.artifact-bucket }}/${{ inputs.zipfile }}
-        	aws s3api put-object-tagging \
-        		--bucket ${{ inputs.artifact-bucket }} \
-        		--key ${{ inputs.zipfile }} \
-        		--tagging "TagSet=[{Key=GIT_HASH,Value=$(GITHUB_SHA)}]"
+          aws s3 cp ${{ inputs.zipfile }} s3://${{ inputs.artifact-bucket }}/${{ inputs.zipfile }}
+          aws s3api put-object-tagging \
+            --bucket ${{ inputs.artifact-bucket }} \
+            --key ${{ inputs.zipfile }} \
+            --tagging "TagSet=[{Key=GIT_HASH,Value=$(GITHUB_SHA)}]"
