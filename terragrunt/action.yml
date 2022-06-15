@@ -40,7 +40,7 @@ runs:
         echo "terragrunt_version=$(cat .terragrunt-version)" >> $GITHUB_ENV
 
     - id: setup-tg
-      uses: peter-murray/terragrunt-github-action@v1
+      uses: peter-murray/terragrunt-github-action@v1.0.0
       with:
         terragrunt_version: ${{ inputs.terragrunt-version != 'false' && inputs.terragrunt-version || env.terragrunt_version }}
 
