@@ -64,4 +64,4 @@ runs:
           aws s3api put-object-tagging \
             --bucket ${{ inputs.artifact-bucket }} \
             --key ${{ inputs.zipfile }} \
-            --tagging "TagSet=[{Key=GIT_HASH,Value=$(GITHUB_SHA)}]"
+            --tagging "TagSet=[{Key=GIT_HASH,Value=$GITHUB_SHA}]"
