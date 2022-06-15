@@ -1,0 +1,67 @@
+name: 'ww-package-lambda'
+description: 'Package and publish a lambda deployment object'
+
+inputs:
+  aws-role-arn:
+    description: 'AWS IAM role to execute as'
+    required: true
+  aws-region:
+    description: "AWS region"
+    required: false
+    default: us-east-1
+  node-version:
+    description: Node version
+    required: false
+    default: '16'
+  artifact-bucket:
+    description: S3 bucket for deployment artifact
+    required: true
+  zipfile:
+    description: Filename of output archive
+    required: false
+    default: 'false'
+  exclusions:
+    description: List of excluded files or directories.
+    required: false
+    default: 'false'
+  include:
+    description: Paths or files to include
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - id: aws-creds
+      uses: aws-actions/configure-aws-credentials@master
+      with:
+        role-to-assume: ${{ inputs.aws-role-arn }}
+        aws-region: ${{ inputs.aws-region }}
+
+    - id: setup-node
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - id: package
+      shell: bash
+      run: |
+          rm -f ${{ inputs.zipfile }}
+          rm -rf node_modules
+          npm ci --only=prod
+
+    - id: archive
+      uses: thedoctor0/zip-release@main
+      with:
+        type: zip
+        filename: ${{ inputs.zipfile }}
+        exclusions: ${{ inputs.exclusions == 'false' && '*.git* /*infrastructure/* Makefile' || inputs.exclusions }}
+        path: ${{ inputs.include }}
+
+    - id: publish
+      shell: bash
+      run: |
+        	aws s3 cp ${{ inputs.zipfile }} s3://${{ inputs.artifact-bucket }}/${{ inputs.zipfile }}
+        	aws s3api put-object-tagging \
+        		--bucket ${{ inputs.artifact-bucket }} \
+        		--key ${{ inputs.zipfile }} \
+        		--tagging "TagSet=[{Key=GIT_HASH,Value=$(GITHUB_SHA)}]"
