@@ -121,3 +121,9 @@ runs:
       shell: bash
       working-directory: ${{ env.working_directory }}
       run: terragrunt hclfmt --terragrunt-check
+
+    - id: tg-validate
+      name: Terragrunt validate
+      shell: bash
+      working-directory: ${{ env.working_directory }}
+      run: terragrunt validate
