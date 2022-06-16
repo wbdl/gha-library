@@ -58,4 +58,4 @@ runs:
     - id: tg-command
       shell: bash
       working-directory: ${{ inputs.working-directory }}
-      run: export TF_INPUT=0; terragrunt ${{ inputs.command }} --terragrunt-non-interactive
+      run: TF_INPUT=0 terragrunt ${{ inputs.command }} --terragrunt-non-interactive
