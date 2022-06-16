@@ -57,7 +57,5 @@ runs:
 
     - id: tg-command
       shell: bash
-      env:
-        TF_INPUT: 'false'
       working-directory: ${{ inputs.working-directory }}
-      run: terragrunt ${{ inputs.command }}
+      run: terragrunt ${{ inputs.command }} --terragrunt-non-interactive
