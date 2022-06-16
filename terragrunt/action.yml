@@ -32,14 +32,14 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - id: setup
-      shell: bash
-      run: |
-        if [[ ${{ inputs.command }} == "apply" ]]; then
-          echo 'tf_cmd="apply -auto-approve"' >> $GITHUB_ENV
-        else
-          echo "tf_cmd=${{ inputs.command }}" >> $GITHUB_ENV
-        fi
+    # - id: setup
+    #   shell: bash
+    #   run: |
+    #     if [[ ${{ inputs.command }} == "apply" ]]; then
+    #       echo 'tf_cmd="apply -auto-approve"' >> $GITHUB_ENV
+    #     else
+    #       echo "tf_cmd=${{ inputs.command }}" >> $GITHUB_ENV
+    #     fi
 
     - id: versions
       if: ${{ inputs.use-dotversion == 'true' }}
@@ -67,4 +67,11 @@ runs:
     - id: tg-command
       shell: bash
       working-directory: ${{ inputs.working-directory }}
-      run: terragrunt $tf_cmd --terragrunt-non-interactive
+      run: |
+        if [[ ${{ inputs.command }} == "apply" ]]; then
+          TF_CMD="apply -auto-approve"
+        else
+          TF_CMD=${{ inputs.command }}
+        fi
+        CMD="terragrunt ${TF_CMD} --terragrunt-non-interactive"
+        eval $CMD
