@@ -36,7 +36,7 @@ runs:
       shell: bash
       run: |
         if [[ ${{ inputs.command }} == "apply" ]]; then
-          echo 'tf_cmd="apply -auto-approve"' >> $GITHUB_ENV
+          echo "tf_cmd='apply -auto-approve'" >> $GITHUB_ENV
         else
           echo "tf_cmd=${{ inputs.command }}" >> $GITHUB_ENV
         fi
@@ -67,4 +67,4 @@ runs:
     - id: tg-command
       shell: bash
       working-directory: ${{ inputs.working-directory }}
-      run: terragrunt ${{ env.tf_cmd }} --terragrunt-non-interactive
+      run: terragrunt $tf_cmd --terragrunt-non-interactive
