@@ -40,7 +40,12 @@ runs:
   steps:
     - id: setup
       shell: bash
-      run: echo "working_directory=${{ inputs.working_directory == 'false' && env.GITHUB_WORKSPACE || inputs.working_directory }}" >> $GITHUB_ENV
+      run: |
+        WORKING_DIR=${{ inputs.working-directory }}
+        if [[ "$WORKING_DIR" == "false" ]]; then
+          WORKING_DIR="$GITHUB_WORKSPACE"
+        fi
+        echo "working_directory=$WORKING_DIR" >> $GITHUB_ENV
 
     - id: versions
       if: ${{ inputs.use-dotversion == 'true' }}
