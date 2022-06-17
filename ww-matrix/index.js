@@ -18,9 +18,8 @@ try {
     output = ['dev', 'qa', 'rc', 'pre', 'prod'];
   }
 
-  console.log(JSON.stringify(output))
+  console.log("Matrix: " + JSON.stringify(output))
   core.setOutput('matrix', output)
-  core.setOutput('test', 'test')
 } catch (error) {
   core.setFailed(error.message);
 }
