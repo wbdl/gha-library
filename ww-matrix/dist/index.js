@@ -2155,10 +2155,10 @@ try {
   const rcRe = new RegExp(rcBranchRegex);
   var output = [];
 
-  console.log(baseBranch)
-  console.log(mainBranch)
-  console.log(prodBranch)
-  console.log(rcBranchRegex)
+  console.log("Base:\t" + baseBranch)
+  console.log("Main:\t" + mainBranch)
+  console.log("Prod:\t" + prodBranch)
+  console.log("RC Regex:\t" + rcBranchRegex)
 
   if (baseBranch == mainBranch) {
     output = ['dev', 'qa'];
@@ -2169,9 +2169,9 @@ try {
   } else {
     output = ['dev', 'qa', 'rc', 'pre', 'prod'];
   }
+
   console.log(output)
-  console.log(JSON.stringify(output))
-  core.setOutput('matrix', JSON.stringify(output))
+  core.setOutput('matrix', output)
 } catch (error) {
   core.setFailed(error.message);
 }
