@@ -2165,7 +2165,8 @@ try {
     output = ['dev', 'qa', 'rc', 'pre', 'prod'];
   }
   console.log(output)
-  core.setOutput('matrix', output)
+  console.log(JSON.stringify(output))
+  core.setOutput('matrix', JSON.stringify(output))
 } catch (error) {
   core.setFailed(error.message);
 }
