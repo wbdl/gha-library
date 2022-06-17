@@ -13,6 +13,11 @@ try {
   const rcRe = new RegExp(rcBranchRegex);
   var output = [];
 
+  console.log(baseBranch)
+  console.log(mainBranch)
+  console.log(prodBranch)
+  console.log(rcBranchRegex)
+
   if (baseBranch == mainBranch) {
     output = ['dev', 'qa'];
   } else if (rcRe.test(baseBranch)) {
