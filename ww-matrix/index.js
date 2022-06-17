@@ -8,11 +8,6 @@ try {
   const rcRe = new RegExp(rcBranchRegex);
   var output = [];
 
-  console.log("Base: " + baseBranch)
-  console.log("Main: " + mainBranch)
-  console.log("Prod: " + prodBranch)
-  console.log("RC:   " + rcBranchRegex)
-
   if (baseBranch == mainBranch) {
     output = ['dev', 'qa'];
   } else if (rcRe.test(baseBranch)) {
@@ -23,7 +18,7 @@ try {
     output = ['dev', 'qa', 'rc', 'pre', 'prod'];
   }
 
-  console.log(output)
+  console.log(JSON.stringify(output))
   core.setOutput('matrix', output)
 } catch (error) {
   core.setFailed(error.message);
