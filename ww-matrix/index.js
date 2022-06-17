@@ -23,7 +23,7 @@ try {
     output = ['dev', 'qa', 'rc', 'pre', 'prod'];
   }
 
-  core.setOutput('matrix', JSON.stringify(output))
+  core.setOutput('matrix', output)
 } catch (error) {
   core.setFailed(error.message);
 }
