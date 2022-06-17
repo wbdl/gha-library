@@ -20,6 +20,7 @@ try {
 
   console.log(JSON.stringify(output))
   core.setOutput('matrix', output)
+  core.setOutput('test', 'test')
 } catch (error) {
   core.setFailed(error.message);
 }
