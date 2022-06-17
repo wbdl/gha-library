@@ -5,14 +5,17 @@ inputs:
   base-branch:
     description: Git base branch.
     required: true
+
   main-branch:
     description: Main branch.
     required: false
     default: develop
+
   prod-branch:
     description: Production deploy branch.
     required: false
     default: master
+
   rc-branch-regex:
     description: Regex matching rc branch format.
     required: false
