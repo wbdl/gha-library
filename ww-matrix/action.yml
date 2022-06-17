@@ -1,0 +1,32 @@
+name: 'ww-matrix'
+description: 'Generate build matrix based on git base ref'
+
+inputs:
+  base-branch:
+    description: 'Git base branch'
+    required: true
+
+outputs:
+  matrix:
+    description: JSON string containing build matrix
+    value: ${{ steps.make-matrix.outputs.tg-envs }}
+
+runs:
+  using: 'composite'
+  steps:
+    - id: make-matrix
+      shell: bash
+      run: |
+        case $GITHUB_BASE_REF in
+          develop)
+            TG_ENVS='["dev", "qa"]'
+            ;;
+          master)
+            TG_ENVS='["pre", "prod"]'
+            ;;
+          *)
+            TG_ENVS='["rc"]'
+            ;;
+        esac
+
+        echo ::set-output name=tg-envs::$TG_ENVS
