@@ -5,18 +5,13 @@ try {
   const mainBranch = core.getInput('main-branch')
   const prodBranch = core.getInput('prod-branch')
   const rcBranchRegex = core.getInput('rc-branch-regex')
-  // const baseBranch = 'rc/v1.0.0'
-  // const mainBranch = 'develop'
-  // const prodBranch = 'master'
-  // const rcBranchRegex = '^rc\/v.*'
-
   const rcRe = new RegExp(rcBranchRegex);
   var output = [];
 
-  console.log("Base:\t" + baseBranch)
-  console.log("Main:\t" + mainBranch)
-  console.log("Prod:\t" + prodBranch)
-  console.log("RC Regex:\t" + rcBranchRegex)
+  console.log("Base: " + baseBranch)
+  console.log("Main: " + mainBranch)
+  console.log("Prod: " + prodBranch)
+  console.log("RC:   " + rcBranchRegex)
 
   if (baseBranch == mainBranch) {
     output = ['dev', 'qa'];
