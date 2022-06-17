@@ -22,7 +22,7 @@ try {
   } else {
     output = ['dev', 'qa', 'rc', 'pre', 'prod'];
   }
-
+  console.log(output)
   core.setOutput('matrix', output)
 } catch (error) {
   core.setFailed(error.message);
