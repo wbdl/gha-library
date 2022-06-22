@@ -30,4 +30,5 @@ runs:
       shell: bash
       run: |
         APIGW_ID=$(aws apigateway get-rest-apis --query "items[?name=='${{ inputs.apigateway-name }}'].id" --output text)
+        echo "$APIGW_ID"
         aws apigateway create-deployment --rest-api-id "$APIGW_ID" --stage-name ${{ inputs.apigateway-stage-name }}
