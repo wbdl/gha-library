@@ -8,7 +8,7 @@ inputs:
   aws-region:
     description: AWS region
     required: false
-    default: us-west-1
+    default: eu-west-1
   apigateway-name:
     description: API Gateway name
     required: true
