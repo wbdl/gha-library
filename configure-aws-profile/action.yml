@@ -1,0 +1,34 @@
+name: 'Configure AWS Profile'
+description: 'Configure AWS CLI Profile from assumed role.'
+
+inputs:
+  aws-role-arn:
+    description: AWS IAM role to execute as
+    required: true
+  aws-region:
+    description: AWS region
+    required: false
+    default: eu-west-1
+  profile-name:
+    description: AWS CLI profile name
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - id: aws-creds
+      uses: aws-actions/configure-aws-credentials@master
+      with:
+        role-to-assume: ${{ inputs.aws-role-arn }}
+        aws-region: ${{ inputs.aws-region }}
+
+    - id: configure-cli
+      shell: bash
+      run: |
+        CREDENTIALS="$(aws sts assume-role --role-arn ${{ inputs.aws-role-arn }} --role-session-name "$GITHUB_JOB" --query 'Credentials.[AccessKeyId, SecretAccessKey, SessionToken]' --output text)"
+        aws --profile ${{ inputs.profile-name }} configure set aws_access_key_id "$(echo $CREDENTIALS | awk '{print $1}')"
+        aws --profile ${{ inputs.profile-name }} configure set aws_secret_access_key "$(echo $CREDENTIALS | awk '{print $2}')"
+        aws --profile ${{ inputs.profile-name }} configure set aws_session_token "$(echo $CREDENTIALS | awk '{print $3}')"
+        aws --profile ${{ inputs.profile-name }} configure set aws_security_token "$(echo $CREDENTIALS | awk '{print $3}')"
+        aws --profile ${{ inputs.profile-name }} configure set region ${{ inputs.aws-region }}
+        aws --profile ${{ inputs.profile-name }} sts get-caller-identity
