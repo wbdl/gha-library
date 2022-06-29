@@ -55,6 +55,7 @@ runs:
     - id: archive
       uses: thedoctor0/zip-release@main
       with:
+        directory: ${{ inputs.working-directory }}
         type: zip
         filename: ${{ inputs.zipfile }}
         exclusions: ${{ inputs.exclusions == 'false' && '*.git* /*infrastructure/* Makefile' || inputs.exclusions }}
