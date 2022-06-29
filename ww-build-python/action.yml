@@ -9,7 +9,7 @@ inputs:
     description: "AWS region"
     required: false
     default: us-west-1
-  node-version:
+  python-version:
     description: Python version
     required: false
     default: '3.9'
