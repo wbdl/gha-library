@@ -54,7 +54,6 @@ runs:
 
     - id: archive
       uses: thedoctor0/zip-release@main
-      working-directory: ${{ inputs.working-directory }}
       with:
         type: zip
         filename: ${{ inputs.zipfile }}
