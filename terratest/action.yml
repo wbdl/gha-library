@@ -80,7 +80,7 @@ runs:
         echo "$TFL_CONFIG"
 
         for DIR in $(find . -type d -not -path '*/.*'); do
-          eval(tflint -f compact "$DIR" "$TFL_CONFIG")
+          eval tflint "$TFL_CONFIG" -f compact "$DIR"
           if [[ "$?" -ne 0 ]]; then
             echo "No newline: $DIR"
             FAIL=true
