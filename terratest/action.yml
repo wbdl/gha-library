@@ -78,7 +78,7 @@ runs:
         fi
 
         for DIR in $(find . -type d -not -path '*/.*'); do
-          tflint -f compact "$DIR" "$TFL_CONFIG"
+          eval(tflint -f compact "$DIR" "$TFL_CONFIG")
           if [[ "$?" -ne 0 ]]; then
             echo "No newline: $DIR"
             FAIL=true
