@@ -22,6 +22,10 @@ inputs:
     description: "tfsec config file"
     required: false
     default: '.tfsec.yaml'
+  tflint-config:
+    description: "tflint config file"
+    required: false
+    default: '.tflint.hcl'
   github-token:
     required: false
     description: "Github token"
@@ -68,8 +72,13 @@ runs:
       run: |
         tflint --init
         FAIL=false
+        TFL_CONFIG = ""
+        if [[ -f "${{ inputs.tflint-config }}" ]]; then
+          TFL_CONFIG = "-c $PWD/${{ inputs.tflint-config }}"
+        fi
+
         for DIR in $(find . -type d -not -path '*/.*'); do
-          tflint -f compact "$DIR"
+          tflint -f compact "$DIR" "$TFL_CONFIG"
           if [[ "$?" -ne 0 ]]; then
             echo "No newline: $DIR"
             FAIL=true
