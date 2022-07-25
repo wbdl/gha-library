@@ -10,7 +10,7 @@ inputs:
     required: false
     default: eu-west-1
   apigateway-name:
-    description: API Gateway name
+    description: API Gateway name, or semi-colon delimited list of names
     required: true
   apigateway-stage-name:
     description: API gateway stage name
@@ -29,5 +29,8 @@ runs:
     - id: deploy
       shell: bash
       run: |
-        APIGW_ID=$(aws --region ${{ inputs.aws-region }} apigateway get-rest-apis --query "items[?name=='${{ inputs.apigateway-name }}'].id" --output text)
-        aws --region ${{ inputs.aws-region }} apigateway create-deployment --rest-api-id "$APIGW_ID" --stage-name ${{ inputs.apigateway-stage-name }}
+        for GW_NAME in $(echo ${{ inputs.apigateway-name}} | sed 's/;/ /'); do
+          APIGW_ID=$(aws --region ${{ inputs.aws-region }} apigateway get-rest-apis --query "items[?name=='$GW_NAME'].id" --output text);
+          aws --region ${{ inputs.aws-region }} apigateway create-deployment --rest-api-id "$APIGW_ID" --stage-name ${{ inputs.apigateway-stage-name }};
+          sleep 10;
+        done
