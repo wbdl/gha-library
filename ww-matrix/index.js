@@ -15,8 +15,7 @@ try {
   } else if (baseBranch == prodBranch) {
     output = ['pre', 'prod'];
   } else {
-    core.setFailed("Unable to determine branching.");
-    // output = ['dev', 'qa', 'rc', 'pre', 'prod'];
+    throw "Unable to determine branching.";
   }
 
   console.log("Matrix: " + JSON.stringify(output))
